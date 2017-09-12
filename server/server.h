@@ -10,10 +10,13 @@ using std::cout;
 using std::endl;
 #include <string>
 using std::string;
+#include <netinet/in.h>
+#include <sys/socket.h>
 
 class Server {
 public:
-
+	void connectToSocket();
+	void bindToPort();
 };
 
 #endif //P1C_SERVER_H
