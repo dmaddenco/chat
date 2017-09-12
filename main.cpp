@@ -4,9 +4,9 @@
 
 //program is run via: "$ ./chat -p 3790 -s 192.168.47.232"
 
-#include "server.h"
-#include "client.h"
-#include "help.h"
+#include "server/server.h"
+#include "client/client.h"
+#include "help/help.h"
 
 string setPort(char* flags[]) {
 	string flag = flags[1];
