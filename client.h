@@ -5,6 +5,14 @@
 #ifndef P1C_CLIENT_H
 #define P1C_CLIENT_H
 
+#include <iostream>
+using std::cout;
+using std::endl;
+#include <string>
+using std::string;
+#include <regex>
+using std::regex;
+
 class Client {
 public:
 	bool checkIp(string ip);

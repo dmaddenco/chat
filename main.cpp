@@ -1,9 +1,8 @@
-#include <iostream>
-using std::cout;
-using std::endl;
-using std::cerr;
-#include <string>
-using std::string;
+//
+// Created by David Madden on 9/7/17.
+//
+
+//program is run via: "$ ./chat -p 3790 -s 192.168.47.232"
 
 #include "server.h"
 #include "client.h"
@@ -35,6 +34,7 @@ string setServerIp(char* flags[]) {
 
 int main(int argc, char* argv[]) {
 	Help help;
+	Client client;
 	string port;
 	string servIp;
 
@@ -45,6 +45,11 @@ int main(int argc, char* argv[]) {
 		//TODO Create client
 		port = setPort(argv);
 		servIp = setServerIp(argv);
+
+		if (!client.checkIp(servIp) || !client.checkPort(port)){
+			help.error();
+		}
+
 	} else if (argc == 2) {
 		string flag = argv[1];
 
