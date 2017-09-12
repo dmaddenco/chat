@@ -11,4 +11,9 @@ using std::endl;
 #include <string>
 using std::string;
 
+class Server {
+public:
+
+};
+
 #endif //P1C_SERVER_H

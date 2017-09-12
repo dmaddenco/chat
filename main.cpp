@@ -35,14 +35,17 @@ string setServerIp(char* flags[]) {
 int main(int argc, char* argv[]) {
 	Help help;
 	Client client;
+	Server server;
+
 	string port;
 	string servIp;
 
 	if (argc == 1) {
 		//TODO Create server
-		cout << "Server" << endl;
+		while (true) {
+
+		}
 	} else if (argc == 5) {
-		//TODO Create client
 		port = setPort(argv);
 		servIp = setServerIp(argv);
 
