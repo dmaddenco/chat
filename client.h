@@ -5,4 +5,10 @@
 #ifndef P1C_CLIENT_H
 #define P1C_CLIENT_H
 
+class Client {
+public:
+	bool checkIp(string ip);
+	bool checkPort(string port);
+};
+
 #endif //P1C_CLIENT_H

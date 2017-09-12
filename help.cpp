@@ -5,7 +5,7 @@
 #include "help.h"
 
 void Help::error(){
-	cout << "Incorrect Number of Arguments" << endl;
+	cout << "!!!!Error Occured in Program!!!!" << endl;
 }
 
 void Help::message() {

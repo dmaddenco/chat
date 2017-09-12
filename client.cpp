@@ -3,3 +3,11 @@
 //
 
 #include "client.h"
+
+bool Client::checkIp(string ip) {
+	return true;
+}
+
+bool Client::checkPort(string port) {
+	return true;
+}
