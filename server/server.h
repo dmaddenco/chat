@@ -17,6 +17,8 @@ class Server {
 public:
 	void connectToSocket();
 	void bindToPort();
+	void listenToPort();
+	void establishConnection();
 };
 
 #endif //P1C_SERVER_H
