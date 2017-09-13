@@ -42,6 +42,7 @@ void Server::listenToPort() {
 }
 
 void Server::establishConnection() {
+	//TODO Clean up
 	/**
 	 * PF_INET for TCP/IP sockets
 	 * SOCK_STREAM is TCP
