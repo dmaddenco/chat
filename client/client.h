@@ -17,6 +17,7 @@ class Client {
 public:
 	bool checkIp(string ip);
 	bool checkPort(string port);
+	void establishConnection(string ip, string port);
 };
 
 #endif //P1C_CLIENT_H

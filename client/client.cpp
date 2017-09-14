@@ -24,3 +24,7 @@ bool Client::checkPort(string port) {
 	}
 	return true;
 }
+
+void Client::establishConnection(string ip, string port){
+
+}

@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
 	Server server;
 
 	string port;
-	string servIp;
+	string ip;
 
 	if (argc == 1) {
 		//TODO Create server
@@ -48,11 +48,13 @@ int main(int argc, char* argv[]) {
 		server.establishConnection();
 	} else if (argc == 5) {
 		port = setPort(argv);
-		servIp = setServerIp(argv);
+		ip = setServerIp(argv);
 
-		if (!client.checkIp(servIp) || !client.checkPort(port)){
+		if (!client.checkIp(ip) || !client.checkPort(port)){
 			help.error();
 		}
+
+		client.establishConnection(ip, port);
 
 	} else if (argc == 2) {
 		string flag = argv[1];
