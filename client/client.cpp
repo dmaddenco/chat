@@ -32,58 +32,18 @@ bool Client::checkPort(string port) {
 
 void Client::establishConnection(string ip, string port){
 	//TODO Clean up
-	int sockfd, numbytes;
-	char buf[MAXDATASIZE];
-	struct addrinfo hints, *servinfo, *p;
-	int rv;
-	char s[INET6_ADDRSTRLEN];
+	struct hostent* host = gethostbyname(ip.c_str());
+	sockaddr_in sendSockAddr;
+	sendSockAddr.sin_family = AF_INET;
+	sendSockAddr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr*)*host->h_addr_list));
+	sendSockAddr.sin_port = htons(stoi(port));
 
-	memset(&hints, 0, sizeof hints);
-	hints.ai_family = AF_UNSPEC;
-	hints.ai_socktype = SOCK_STREAM;
+	int clientSock = socket(AF_INET, SOCK_STREAM, 0);
 
-	if ((rv = getaddrinfo(ip.c_str(), port.c_str(), &hints, &servinfo)) != 0) {
-		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
+	if (connect(clientSock, (sockaddr*) &sendSockAddr, sizeof(sendSockAddr)) < 0) {
+		perror("connect fail");
 		exit(EXIT_FAILURE);
 	}
-
-	// loop through all the results and connect to the first we can
-	for(p = servinfo; p != NULL; p = p->ai_next) {
-		if ((sockfd = socket(p->ai_family, p->ai_socktype,
-							 p->ai_protocol)) == -1) {
-			perror("client: socket");
-			continue;
-		}
-
-		if (connect(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
-			close(sockfd);
-			perror("client: connect");
-			continue;
-		}
-
-		break;
-	}
-
-	if (p == NULL) {
-		fprintf(stderr, "client: failed to connect\n");
-		exit(EXIT_FAILURE);
-	}
-
-	inet_ntop(p->ai_family, ((struct sockaddr *)p->ai_addr), s, sizeof s);
-	printf("client: connecting to %s\n", s);
-
-	freeaddrinfo(servinfo); // all done with this structure
-
-	if ((numbytes = recv(sockfd, buf, MAXDATASIZE-1, 0)) == -1) {
-		perror("recv");
-		exit(EXIT_FAILURE);
-	}
-
-	buf[numbytes] = '\0';
-
-	printf("client: received '%s'\n",buf);
-
-	close(sockfd);
 
 	printWelcome();
 

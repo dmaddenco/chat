@@ -20,6 +20,7 @@ class Server {
 public:
 	void establishConnection();
 	void printWelcome(sockaddr_in address);
+	void printConnection();
 };
 
 #endif //P1C_SERVER_H

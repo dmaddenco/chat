@@ -48,6 +48,7 @@ void Server::establishConnection() {
 		exit(EXIT_FAILURE);
 	}
 
+	printConnection();
 
 //	struct sockaddr_storage their_addr;
 //	socklen_t addr_size;
@@ -80,12 +81,19 @@ void Server::establishConnection() {
 }
 
 void Server::printWelcome(sockaddr_in servAddr) {
+	struct hostent *he;
+	struct in_addr **addr_list;
 	char hostname[128];
 
 	gethostname(hostname, sizeof hostname);
-	cout << hostname << endl;
+	he = gethostbyname(hostname);
+	addr_list = (struct in_addr **)he->h_addr_list;
 
 	cout << "Welcome to Chat!" << endl;
 	cout << "Waiting on connection on" << endl;
-	cout << inet_ntoa(servAddr.sin_addr) << " port " << ntohs(servAddr.sin_port) << endl;
+	cout << inet_ntoa(*addr_list[0]) << " port " << ntohs(servAddr.sin_port) << endl;
+}
+
+void Server::printConnection() {
+	cout << "Found a friend! You receive first." << endl;
 }
