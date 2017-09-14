@@ -12,12 +12,20 @@ using std::endl;
 using std::string;
 #include <regex>
 using std::regex;
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+
+#include <netdb.h>
+#include <netinet/in.h>
 
 class Client {
 public:
 	bool checkIp(string ip);
 	bool checkPort(string port);
 	void establishConnection(string ip, string port);
+	void printWelcome();
 };
 
 #endif //P1C_CLIENT_H
