@@ -13,7 +13,7 @@ bool Client::checkIp(string ip) {
 }
 
 bool Client::checkPort(string port) {
-	for (int i = 0; i < port.length(); ++i) {
+	for (int i = 0; i < (int) port.length(); ++i) {
 		if (!isdigit(port[i])) {
 			return false;
 		}

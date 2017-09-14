@@ -19,6 +19,7 @@ public:
 	void bindToPort();
 	void listenToPort();
 	void establishConnection();
+	void printWelcome(sockaddr_in address);
 };
 
 #endif //P1C_SERVER_H

@@ -49,6 +49,7 @@ void Server::establishConnection() {
 	 * 0 is for Internet protocol
 	 */
 	sock = socket(PF_INET, SOCK_STREAM, 0);
+
 	if (sock < 0) {
 		perror("socket fail");
 		exit(EXIT_FAILURE);
@@ -70,14 +71,21 @@ void Server::establishConnection() {
 		exit(EXIT_FAILURE);
 	}
 
+	printWelcome(address);
+
 	struct sockaddr_storage their_addr;
 	socklen_t addr_size;
 
 	addr_size = sizeof their_addr;
 	int connection = accept(sock, (sockaddr *)&their_addr, &addr_size);
-
 	if (connection < 0) {
 		perror("connection failed");
 		exit(EXIT_FAILURE);
 	}
+}
+
+void Server::printWelcome(sockaddr_in address) {
+	cout << "Welcome to Chat!" << endl;
+	cout << "Waiting on connection on" << endl;
+	cout << address.sin_addr.s_addr << " port " << address.sin_port << endl;
 }
