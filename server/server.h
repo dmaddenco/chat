@@ -14,12 +14,10 @@ using std::string;
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <netdb.h>
 
 class Server {
 public:
-	void connectToSocket();
-	void bindToPort();
-	void listenToPort();
 	void establishConnection();
 	void printWelcome(sockaddr_in address);
 };

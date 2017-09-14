@@ -42,9 +42,6 @@ int main(int argc, char* argv[]) {
 
 	if (argc == 1) {
 		//TODO Create server
-//		server.connectToSocket();
-//		server.bindToPort();
-//		server.listenToPort();
 		server.establishConnection();
 	} else if (argc == 5) {
 		port = setPort(argv);

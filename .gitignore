@@ -85,3 +85,4 @@ fabric.properties
 # Per Project
 chat
 chat*
+.DS_*
