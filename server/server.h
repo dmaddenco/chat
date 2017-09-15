@@ -24,6 +24,10 @@ public:
 	void establishConnection();
 	void printWelcome(sockaddr_in address);
 	void printConnection();
+	void printMessage(char msg[]);
+	string getMessage();
+	bool checkMessageSize(string msg);
+	void msgError();
 };
 
 #endif //P1C_SERVER_H

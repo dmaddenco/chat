@@ -5,6 +5,7 @@
 #include "server.h"
 #define MAXPENDING 5
 #define PORT 5000
+#define MAXSIZE 140
 
 int servSock;
 
@@ -50,27 +51,25 @@ void Server::establishConnection() {
 
 	printConnection();
 
-	int bytesRead, bytesWritten = 0;
-	while(1) {
-		//receive a message from the client (listen)
-		char msg[1500];
-		memset(&msg, 0, sizeof(msg));//clear the buffer
-		bytesRead += recv(newServSock, (char*)&msg, sizeof(msg), 0);
+	while(true) {
+		char msg[MAXSIZE];
+		memset(&msg, 0, sizeof(msg));	//clear the buffer
 
-		cout << "Friend: " << msg << endl;
-		cout << "You: ";
-		string data;
-		getline(cin, data);
-		memset(&msg, 0, sizeof(msg)); //clear the buffer
-		strcpy(msg, data.c_str());
-		if(data == "exit")
-		{
-			//send to the client that server has closed the connection
-			send(newServSock, (char*)&msg, strlen(msg), 0);
-			break;
+		recv(newServSock, (char*)&msg, sizeof(msg), 0);
+
+		printMessage(msg);
+		string data = getMessage();
+
+		while (!checkMessageSize(data)) {
+			msgError();
+			data = getMessage();
 		}
+
+		memset(&msg, 0, sizeof(msg));	//clear the buffer
+		strcpy(msg, data.c_str());
+
 		//send the message to client
-		bytesWritten += send(newServSock, (char*)&msg, strlen(msg), 0);
+		send(newServSock, (char*)&msg, strlen(msg), 0);
 	}
 	close(newServSock);
 	close(servSock);
@@ -92,4 +91,26 @@ void Server::printWelcome(sockaddr_in servAddr) {
 
 void Server::printConnection() {
 	cout << "Found a friend! You receive first." << endl;
+}
+
+void Server::printMessage(char *msg) {
+	cout << "Friend: " << msg << endl;
+}
+
+string Server::getMessage() {
+	cout << "You: ";
+	string data;
+	getline(cin, data);
+	return data;
+}
+
+bool Server::checkMessageSize(string msg) {
+	if (msg.length() > MAXSIZE) {
+		return false;
+	}
+	return true;
+}
+
+void Server::msgError() {
+	cout << "Error: Input too long." << endl;
 }

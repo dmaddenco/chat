@@ -28,6 +28,10 @@ public:
 	bool checkPort(string port);
 	void establishConnection(string ip, string port);
 	void printWelcome();
+	void printMessage(char msg[]);
+	string getMessage();
+	bool checkMessageSize(string msg);
+	void msgError();
 };
 
 #endif //P1C_CLIENT_H

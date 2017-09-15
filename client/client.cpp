@@ -3,7 +3,7 @@
 //
 
 #include "client.h"
-#define MAXDATASIZE 100
+#define MAXSIZE 140
 
 bool Client::checkIp(string ip) {
 //	regex r("\\d{1,3}(\\.\\d{1,3}){3})");
@@ -31,7 +31,6 @@ bool Client::checkPort(string port) {
 }
 
 void Client::establishConnection(string ip, string port){
-	//TODO Clean up
 	struct hostent* host = gethostbyname(ip.c_str());
 	sockaddr_in sendSockAddr;
 	sendSockAddr.sin_family = AF_INET;
@@ -47,30 +46,50 @@ void Client::establishConnection(string ip, string port){
 
 	printWelcome();
 
-	int bytesRead, bytesWritten = 0;
-
-	while(1) {
-		char msg[1500];
-		cout << "You: ";
-		string data;
-		getline(cin, data);
+	while(true) {
+		char msg[MAXSIZE];
 		memset(&msg, 0, sizeof(msg));//clear the buffer
-		strcpy(msg, data.c_str());
-		if(data == "exit")
-		{
-			send(clientSock, (char*)&msg, strlen(msg), 0);
-			break;
+
+		string data = getMessage();
+
+		while (!checkMessageSize(data)) {
+			msgError();
+			data = getMessage();
 		}
-		bytesWritten += send(clientSock, (char*)&msg, strlen(msg), 0);
+
+		strcpy(msg, data.c_str());
+		send(clientSock, (char*)&msg, strlen(msg), 0);
 
 		memset(&msg, 0, sizeof(msg));//clear the buffer
-		bytesRead += recv(clientSock, (char*)&msg, sizeof(msg), 0);
+		recv(clientSock, (char*)&msg, sizeof(msg), 0);
 
-		cout << "Friend: " << msg << endl;
+		printMessage(msg);
 	}
 	close(clientSock);
 }
 
 void Client::printWelcome() {
 	cout << "Connected to a friend! You send first." << endl;
+}
+
+void Client::printMessage(char *msg) {
+	cout << "Friend: " << msg << endl;
+}
+
+string Client::getMessage() {
+	cout << "You: ";
+	string data;
+	getline(cin, data);
+	return data;
+}
+
+bool Client::checkMessageSize(string msg) {
+	if (msg.length() > MAXSIZE) {
+		return false;
+	}
+	return true;
+}
+
+void Client::msgError() {
+	cout << "Error: Input too long." << endl;
 }

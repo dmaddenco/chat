@@ -31,7 +31,7 @@ string setServerIp(char* flags[]) {
 	}
 	return 0;
 }
-
+//TODO create packet
 int main(int argc, char* argv[]) {
 	Help help;
 	Client client;
@@ -41,7 +41,6 @@ int main(int argc, char* argv[]) {
 	string ip;
 
 	if (argc == 1) {
-		//TODO Create server
 		server.establishConnection();
 	} else if (argc == 5) {
 		port = setPort(argv);
