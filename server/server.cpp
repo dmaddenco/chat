@@ -131,12 +131,9 @@ void Server::msgError() {
 }
 
 bool Server::checkPacket(Packet packet) {
-	cout << (packet.msgLength) << endl;
-	cout << ntohs(packet.msgLength) << endl;
-	if (ntohs(packet.version) == 457) {
+	if (ntohs(packet.version) != VERSION) {
 		return false;
 	}
-	cout << ntohs(packet.msgLength) << endl;
 	if (ntohs(packet.msgLength) != strlen(packet.msg)) {
 		return false;
 	}

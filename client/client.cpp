@@ -104,7 +104,7 @@ void Client::msgError() {
 }
 
 bool Client::checkPacket(Packet packet) {
-	if (ntohs(packet.version) == 457) {
+	if (ntohs(packet.version) != VERSION) {
 		return false;
 	}
 	if (ntohs(packet.msgLength) != strlen(packet.msg)) {
