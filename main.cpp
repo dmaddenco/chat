@@ -2,7 +2,7 @@
 // Created by David Madden on 9/7/17.
 //
 
-//program is run via: "$ ./chat -p 3790 -s 192.168.47.232"
+//program is run via: "$ ./chat -p <port> -s <ip>"
 
 #include "server/server.h"
 #include "client/client.h"

@@ -8,19 +8,13 @@
 #include <iostream>
 using std::cout;
 using std::endl;
+using std::cin;
 #include <string>
 using std::string;
-#include <regex>
-using std::regex;
-#include <netinet/in.h>
-#include <sys/socket.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#include <netinet/in.h>
 #include <cstring>
-#include <iostream>
-using std::cin;
 
 class Client {
 public:

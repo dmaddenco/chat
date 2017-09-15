@@ -8,16 +8,13 @@
 #include <iostream>
 using std::cout;
 using std::endl;
+using std::cin;
 #include <string>
 using std::string;
-#include <netinet/in.h>
-#include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <netdb.h>
 #include <cstring>
-#include <iostream>
-using std::cin;
 
 class Server {
 public:

@@ -6,10 +6,6 @@
 #define MAXSIZE 140
 
 bool Client::checkIp(string ip) {
-//	regex r("\\d{1,3}(\\.\\d{1,3}){3})");
-//	if (!regex_match(ip,r)) {
-//		return false;
-//	}
 	struct sockaddr_in sa;
 	if (inet_pton(AF_INET, ip.c_str(), &(sa.sin_addr)) != 1) {
 		return false;
