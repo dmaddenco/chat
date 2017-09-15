@@ -31,6 +31,8 @@ public:
 	string getMessage();
 	bool checkMessageSize(string msg);
 	void msgError();
+	bool checkPacket(Packet packet);
+	void printPacketError();
 };
 
 #endif //P1C_SERVER_H

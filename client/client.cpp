@@ -67,7 +67,12 @@ void Client::establishConnection(string ip, string port){
 		recv(clientSock, &clientPacket, sizeof(clientPacket), 0);
 
 //		printMessage(msg);
-		printMessage(clientPacket.msg);
+//		printMessage(clientPacket.msg);
+		if (checkPacket(clientPacket)) {
+			printMessage(clientPacket.msg);
+		} else {
+			printPacketError();
+		}
 	}
 	close(clientSock);
 }
@@ -96,4 +101,18 @@ bool Client::checkMessageSize(string msg) {
 
 void Client::msgError() {
 	cout << "Error: Input too long." << endl;
+}
+
+bool Client::checkPacket(Packet packet) {
+	if (ntohs(packet.version) == 457) {
+		return false;
+	}
+	if (ntohs(packet.msgLength) != strlen(packet.msg)) {
+		return false;
+	}
+	return true;
+}
+
+void Client::printPacketError() {
+	cout << "Malformed packet." << endl;
 }

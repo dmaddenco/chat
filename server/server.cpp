@@ -62,7 +62,11 @@ void Server::establishConnection() {
 		recv(newServSock, &svrPacket, sizeof(svrPacket), 0);
 
 //		printMessage(msg);
-		printMessage(svrPacket.msg);
+		if (checkPacket(svrPacket)) {
+			printMessage(svrPacket.msg);
+		} else {
+			printPacketError();
+		}
 
 		string data = getMessage();
 
@@ -124,4 +128,21 @@ bool Server::checkMessageSize(string msg) {
 
 void Server::msgError() {
 	cout << "Error: Input too long." << endl;
+}
+
+bool Server::checkPacket(Packet packet) {
+	cout << (packet.msgLength) << endl;
+	cout << ntohs(packet.msgLength) << endl;
+	if (ntohs(packet.version) == 457) {
+		return false;
+	}
+	cout << ntohs(packet.msgLength) << endl;
+	if (ntohs(packet.msgLength) != strlen(packet.msg)) {
+		return false;
+	}
+	return true;
+}
+
+void Server::printPacketError() {
+	cout << "Malformed packet." << endl;
 }
