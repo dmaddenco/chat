@@ -4,6 +4,10 @@
 
 #ifndef P1C_SERVER_H
 #define P1C_SERVER_H
+#define MAXPENDING 5
+#define PORT 5000
+#define MAXSIZE 140
+#define VERSION 457
 
 #include <iostream>
 using std::cout;
@@ -25,6 +29,12 @@ public:
 	string getMessage();
 	bool checkMessageSize(string msg);
 	void msgError();
+};
+
+struct Packet {
+	int version = VERSION;
+	int msgLength;
+	char msg[MAXSIZE];
 };
 
 #endif //P1C_SERVER_H

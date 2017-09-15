@@ -3,7 +3,6 @@
 //
 
 #include "client.h"
-#define MAXSIZE 140
 
 bool Client::checkIp(string ip) {
 	struct sockaddr_in sa;

@@ -3,9 +3,10 @@
 //
 
 #include "server.h"
-#define MAXPENDING 5
-#define PORT 5000
-#define MAXSIZE 140
+//#define MAXPENDING 5
+//#define PORT 5000
+//#define MAXSIZE 140
+//#define VERSION 457
 
 int servSock;
 
