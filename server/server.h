@@ -20,6 +20,8 @@ using std::string;
 #include <netdb.h>
 #include <cstring>
 
+#include "packet/packet.h"
+
 class Server {
 public:
 	void establishConnection();
@@ -29,12 +31,6 @@ public:
 	string getMessage();
 	bool checkMessageSize(string msg);
 	void msgError();
-};
-
-struct Packet {
-	int version = VERSION;
-	int msgLength;
-	char msg[MAXSIZE];
 };
 
 #endif //P1C_SERVER_H

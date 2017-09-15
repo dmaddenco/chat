@@ -4,7 +4,6 @@
 
 #ifndef P1C_CLIENT_H
 #define P1C_CLIENT_H
-#define MAXSIZE 140
 
 #include <iostream>
 using std::cout;
@@ -16,6 +15,8 @@ using std::string;
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <cstring>
+
+#include "packet/packet.h"
 
 class Client {
 public:
