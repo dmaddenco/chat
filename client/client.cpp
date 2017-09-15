@@ -47,6 +47,28 @@ void Client::establishConnection(string ip, string port){
 
 	printWelcome();
 
+	int bytesRead, bytesWritten = 0;
+
+	while(1) {
+		char msg[1500];
+		cout << "You: ";
+		string data;
+		getline(cin, data);
+		memset(&msg, 0, sizeof(msg));//clear the buffer
+		strcpy(msg, data.c_str());
+		if(data == "exit")
+		{
+			send(clientSock, (char*)&msg, strlen(msg), 0);
+			break;
+		}
+		bytesWritten += send(clientSock, (char*)&msg, strlen(msg), 0);
+
+		memset(&msg, 0, sizeof(msg));//clear the buffer
+		bytesRead += recv(clientSock, (char*)&msg, sizeof(msg), 0);
+
+		cout << "Friend: " << msg << endl;
+	}
+	close(clientSock);
 }
 
 void Client::printWelcome() {

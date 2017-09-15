@@ -50,34 +50,30 @@ void Server::establishConnection() {
 
 	printConnection();
 
-//	struct sockaddr_storage their_addr;
-//	socklen_t addr_size;
-//
-//	addr_size = sizeof their_addr;
-//	int connection = accept(servSock, (sockaddr *)&their_addr, &addr_size);
-//	if (connection < 0) {
-//		perror("connection failed");
-//		exit(EXIT_FAILURE);
-//	}
-//	char s[INET6_ADDRSTRLEN];
-//	while(1) {  // main accept() loop
-//		socklen_t sin_size = sizeof their_addr;
-//		int new_fd = accept(servSock, (struct sockaddr *) &their_addr, &sin_size);
-//		if (new_fd == -1) {
-//			perror("accept");
-//			continue;
-//		}
-//
-//		inet_ntop(their_addr.ss_family, ((struct sockaddr *) &their_addr), s, sizeof s);
-//		printf("server: got connection from %s\n", s);
-//
-//		if (send(new_fd, "Hello, world!", 13, 0) == -1) {
-//			perror("send");
-//			exit(EXIT_FAILURE);
-//		}
-//		close(new_fd);
-//		close(new_fd);  // parent doesn't need this
-//	}
+	int bytesRead, bytesWritten = 0;
+	while(1) {
+		//receive a message from the client (listen)
+		char msg[1500];
+		memset(&msg, 0, sizeof(msg));//clear the buffer
+		bytesRead += recv(newServSock, (char*)&msg, sizeof(msg), 0);
+
+		cout << "Friend: " << msg << endl;
+		cout << "You: ";
+		string data;
+		getline(cin, data);
+		memset(&msg, 0, sizeof(msg)); //clear the buffer
+		strcpy(msg, data.c_str());
+		if(data == "exit")
+		{
+			//send to the client that server has closed the connection
+			send(newServSock, (char*)&msg, strlen(msg), 0);
+			break;
+		}
+		//send the message to client
+		bytesWritten += send(newServSock, (char*)&msg, strlen(msg), 0);
+	}
+	close(newServSock);
+	close(servSock);
 }
 
 void Server::printWelcome(sockaddr_in servAddr) {

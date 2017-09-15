@@ -15,6 +15,9 @@ using std::string;
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <netdb.h>
+#include <cstring>
+#include <iostream>
+using std::cin;
 
 class Server {
 public:

@@ -16,9 +16,11 @@ using std::regex;
 #include <sys/socket.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-
 #include <netdb.h>
 #include <netinet/in.h>
+#include <cstring>
+#include <iostream>
+using std::cin;
 
 class Client {
 public:
