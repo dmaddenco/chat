@@ -4,6 +4,10 @@
 
 #ifndef P1C_SERVER_H
 #define P1C_SERVER_H
+#define MAXPENDING 5
+#define PORT 5000
+#define MAXSIZE 140
+#define VERSION 457
 
 #include <iostream>
 using std::cout;
@@ -16,6 +20,8 @@ using std::string;
 #include <netdb.h>
 #include <cstring>
 
+#include "packet/packet.h"
+
 class Server {
 public:
 	void establishConnection();
@@ -25,6 +31,8 @@ public:
 	string getMessage();
 	bool checkMessageSize(string msg);
 	void msgError();
+	bool checkPacket(Packet packet);
+	void printPacketError();
 };
 
 #endif //P1C_SERVER_H

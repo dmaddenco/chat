@@ -3,7 +3,6 @@
 //
 
 #include "client.h"
-#define MAXSIZE 140
 
 bool Client::checkIp(string ip) {
 	struct sockaddr_in sa;
@@ -43,6 +42,8 @@ void Client::establishConnection(string ip, string port){
 	printWelcome();
 
 	while(true) {
+		Packet clientPacket;
+
 		char msg[MAXSIZE];
 		memset(&msg, 0, sizeof(msg));//clear the buffer
 
@@ -53,13 +54,25 @@ void Client::establishConnection(string ip, string port){
 			data = getMessage();
 		}
 
-		strcpy(msg, data.c_str());
-		send(clientSock, (char*)&msg, strlen(msg), 0);
+		clientPacket.msgLength = htons(data.length());
+		strcpy(clientPacket.msg, data.c_str());
+
+//		strcpy(msg, data.c_str());
+//		send(clientSock, (char*)&msg, strlen(msg), 0);
+		send(clientSock, &clientPacket, sizeof(clientPacket), 0);
 
 		memset(&msg, 0, sizeof(msg));//clear the buffer
-		recv(clientSock, (char*)&msg, sizeof(msg), 0);
 
-		printMessage(msg);
+//		recv(clientSock, (char*)&msg, sizeof(msg), 0);
+		recv(clientSock, &clientPacket, sizeof(clientPacket), 0);
+
+//		printMessage(msg);
+//		printMessage(clientPacket.msg);
+		if (checkPacket(clientPacket)) {
+			printMessage(clientPacket.msg);
+		} else {
+			printPacketError();
+		}
 	}
 	close(clientSock);
 }
@@ -88,4 +101,18 @@ bool Client::checkMessageSize(string msg) {
 
 void Client::msgError() {
 	cout << "Error: Input too long." << endl;
+}
+
+bool Client::checkPacket(Packet packet) {
+	if (ntohs(packet.version) != VERSION) {
+		return false;
+	}
+	if (ntohs(packet.msgLength) != strlen(packet.msg)) {
+		return false;
+	}
+	return true;
+}
+
+void Client::printPacketError() {
+	cout << "Malformed packet." << endl;
 }

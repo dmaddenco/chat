@@ -3,9 +3,10 @@
 //
 
 #include "server.h"
-#define MAXPENDING 5
-#define PORT 5000
-#define MAXSIZE 140
+//#define MAXPENDING 5
+//#define PORT 5000
+//#define MAXSIZE 140
+//#define VERSION 457
 
 int servSock;
 
@@ -52,12 +53,21 @@ void Server::establishConnection() {
 	printConnection();
 
 	while(true) {
+		Packet svrPacket;
+
 		char msg[MAXSIZE];
 		memset(&msg, 0, sizeof(msg));	//clear the buffer
 
-		recv(newServSock, (char*)&msg, sizeof(msg), 0);
+//		recv(newServSock, (char*)&msg, sizeof(msg), 0);
+		recv(newServSock, &svrPacket, sizeof(svrPacket), 0);
 
-		printMessage(msg);
+//		printMessage(msg);
+		if (checkPacket(svrPacket)) {
+			printMessage(svrPacket.msg);
+		} else {
+			printPacketError();
+		}
+
 		string data = getMessage();
 
 		while (!checkMessageSize(data)) {
@@ -65,12 +75,17 @@ void Server::establishConnection() {
 			data = getMessage();
 		}
 
+		svrPacket.msgLength = htons(data.length());
+		strcpy(svrPacket.msg, data.c_str());
+
 		memset(&msg, 0, sizeof(msg));	//clear the buffer
-		strcpy(msg, data.c_str());
+//		strcpy(msg, data.c_str());
 
 		//send the message to client
-		send(newServSock, (char*)&msg, strlen(msg), 0);
+//		send(newServSock, (char*)&msg, strlen(msg), 0);
+		send(newServSock, &svrPacket, sizeof(svrPacket), 0);
 	}
+	//TODO signal handler
 	close(newServSock);
 	close(servSock);
 }
@@ -113,4 +128,18 @@ bool Server::checkMessageSize(string msg) {
 
 void Server::msgError() {
 	cout << "Error: Input too long." << endl;
+}
+
+bool Server::checkPacket(Packet packet) {
+	if (ntohs(packet.version) != VERSION) {
+		return false;
+	}
+	if (ntohs(packet.msgLength) != strlen(packet.msg)) {
+		return false;
+	}
+	return true;
+}
+
+void Server::printPacketError() {
+	cout << "Malformed packet." << endl;
 }
