@@ -2,7 +2,7 @@
 // Created by David Madden on 9/7/17.
 //
 
-//program is run via: "$ ./chat -p 3790 -s 192.168.47.232"
+//program is run via: "$ ./chat -p <port> -s <ip>"
 
 #include "server/server.h"
 #include "client/client.h"
@@ -31,28 +31,26 @@ string setServerIp(char* flags[]) {
 	}
 	return 0;
 }
-
+//TODO create packet
 int main(int argc, char* argv[]) {
 	Help help;
 	Client client;
 	Server server;
 
 	string port;
-	string servIp;
+	string ip;
 
 	if (argc == 1) {
-		//TODO Create server
-//		server.connectToSocket();
-//		server.bindToPort();
-//		server.listenToPort();
 		server.establishConnection();
 	} else if (argc == 5) {
 		port = setPort(argv);
-		servIp = setServerIp(argv);
+		ip = setServerIp(argv);
 
-		if (!client.checkIp(servIp) || !client.checkPort(port)){
+		if (!client.checkIp(ip) || !client.checkPort(port)){
 			help.error();
 		}
+
+		client.establishConnection(ip, port);
 
 	} else if (argc == 2) {
 		string flag = argv[1];

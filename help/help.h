@@ -8,9 +8,6 @@
 #include <iostream>
 using std::cout;
 using std::endl;
-using std::cerr;
-#include <string>
-using std::string;
 
 class Help {
 public:
