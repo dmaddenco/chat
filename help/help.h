@@ -6,13 +6,15 @@
 #define P1C_HELP_H
 
 #include <iostream>
+
 using std::cout;
 using std::endl;
 
 class Help {
 public:
-	void error();
-	void message();
+    void error();
+
+    void message();
 };
 
 #endif //P1C_HELP_H

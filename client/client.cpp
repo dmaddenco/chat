@@ -4,115 +4,118 @@
 
 #include "client.h"
 
+int clientSock;
+
+void closeClientSocks(int sig) {
+    close(clientSock);
+    exit(0);
+}
+
 bool Client::checkIp(string ip) {
-	struct sockaddr_in sa;
-	if (inet_pton(AF_INET, ip.c_str(), &(sa.sin_addr)) != 1) {
-		return false;
-	}
-	return true;
+    struct sockaddr_in sa;
+    if (inet_pton(AF_INET, ip.c_str(), &(sa.sin_addr)) != 1) {
+        return false;
+    }
+    return true;
 }
 
 bool Client::checkPort(string port) {
-	for (int i = 0; i < (int) port.length(); ++i) {
-		if (!isdigit(port[i])) {
-			return false;
-		}
-	}
-	int p = stoi(port);
-	if (p > 65535 || p < 1024) {
-		return false;
-	}
-	return true;
+    for (int i = 0; i < (int) port.length(); ++i) {
+        if (!isdigit(port[i])) {
+            return false;
+        }
+    }
+    int p = stoi(port);
+    if (p > 65535 || p < 1024) {
+        return false;
+    }
+    return true;
 }
 
-void Client::establishConnection(string ip, string port){
-	struct hostent* host = gethostbyname(ip.c_str());
-	sockaddr_in sendSockAddr;
-	sendSockAddr.sin_family = AF_INET;
-	sendSockAddr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr*)*host->h_addr_list));
-	sendSockAddr.sin_port = htons(stoi(port));
+void Client::establishConnection(string ip, string port) {
+    signal(SIGINT, closeClientSocks);
 
-	int clientSock = socket(AF_INET, SOCK_STREAM, 0);
+    struct hostent *host = gethostbyname(ip.c_str());
+    sockaddr_in sendSockAddr;
+    sendSockAddr.sin_family = AF_INET;
+    sendSockAddr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *) *host->h_addr_list));
+    sendSockAddr.sin_port = htons(stoi(port));
 
-	if (connect(clientSock, (sockaddr*) &sendSockAddr, sizeof(sendSockAddr)) < 0) {
-		perror("connect fail");
-		exit(EXIT_FAILURE);
-	}
+    clientSock = socket(AF_INET, SOCK_STREAM, 0);
 
-	printWelcome();
+    if (connect(clientSock, (sockaddr * ) & sendSockAddr, sizeof(sendSockAddr)) < 0) {
+        perror("connect fail");
+        exit(EXIT_FAILURE);
+    }
 
-	while(true) {
-		Packet clientPacket;
+    printWelcome();
 
-		char msg[MAXSIZE];
-		memset(&msg, 0, sizeof(msg));//clear the buffer
+    while (true) {
+        Packet clientPacket;
 
-		string data = getMessage();
+        char msg[MAXSIZE];
+        memset(&msg, 0, sizeof(msg)); //clear the buffer
 
-		while (!checkMessageSize(data)) {
-			msgError();
-			data = getMessage();
-		}
+        string data = getMessage();
 
-		clientPacket.msgLength = htons(data.length());
-		strcpy(clientPacket.msg, data.c_str());
+        while (!checkMessageSize(data)) {
+            msgError();
+            data = getMessage();
+        }
 
-//		strcpy(msg, data.c_str());
-//		send(clientSock, (char*)&msg, strlen(msg), 0);
-		send(clientSock, &clientPacket, sizeof(clientPacket), 0);
+        clientPacket.msgLength = htons(data.length());
+        strcpy(clientPacket.msg, data.c_str());
 
-		memset(&msg, 0, sizeof(msg));//clear the buffer
+        send(clientSock, &clientPacket, sizeof(clientPacket), 0);
 
-//		recv(clientSock, (char*)&msg, sizeof(msg), 0);
-		recv(clientSock, &clientPacket, sizeof(clientPacket), 0);
+        memset(&msg, 0, sizeof(msg)); //clear the buffer
 
-//		printMessage(msg);
-//		printMessage(clientPacket.msg);
-		if (checkPacket(clientPacket)) {
-			printMessage(clientPacket.msg);
-		} else {
-			printPacketError();
-		}
-	}
-	close(clientSock);
+        recv(clientSock, &clientPacket, sizeof(clientPacket), 0);
+
+        if (checkPacket(clientPacket)) {
+            printMessage(clientPacket.msg);
+        } else {
+            printPacketError();
+        }
+    }
 }
 
 void Client::printWelcome() {
-	cout << "Connected to a friend! You send first." << endl;
+    cout << "Connected to a friend! You send first." << endl;
 }
 
 void Client::printMessage(char *msg) {
-	cout << "Friend: " << msg << endl;
+    cout << "Friend: " << msg << endl;
 }
 
 string Client::getMessage() {
-	cout << "You: ";
-	string data;
-	getline(cin, data);
-	return data;
+    cout << "You: ";
+    string data;
+    getline(cin, data);
+    return data;
 }
 
 bool Client::checkMessageSize(string msg) {
-	if (msg.length() > MAXSIZE) {
-		return false;
-	}
-	return true;
+    if (msg.length() > MAXSIZE) {
+        return false;
+    }
+    return true;
 }
 
 void Client::msgError() {
-	cout << "Error: Input too long." << endl;
+    cout << "Error: Input too long." << endl;
 }
 
 bool Client::checkPacket(Packet packet) {
-	if (ntohs(packet.version) != VERSION) {
-		return false;
-	}
-	if (ntohs(packet.msgLength) != strlen(packet.msg)) {
-		return false;
-	}
-	return true;
+    if (ntohs(packet.version) != VERSION) {
+        return false;
+    }
+    if (ntohs(packet.msgLength) != strlen(packet.msg)) {
+        return false;
+    }
+    return true;
 }
 
 void Client::printPacketError() {
-	cout << "Malformed packet." << endl;
+    cout << "Malformed packet." << endl;
 }
