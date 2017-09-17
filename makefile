@@ -5,4 +5,4 @@ chat: client/*.cpp server/*.cpp help/*.cpp *.cpp client/*.h server/*.h help/*.h 
 clean:
 	rm -rf *.o *.tar chat*
 tar:
-	tar -cvf chat.tar client/*.cpp server/*.cpp help/*.cpp *.cpp client/*.h server/*.h help/*.h packet/*.h *.h makefile README.txt
+	tar -cvf client/client.cpp client/client.h help/help.cpp help/help.h packet/packet.h server/server.cpp server/server.h main.cpp makefile README.txt
